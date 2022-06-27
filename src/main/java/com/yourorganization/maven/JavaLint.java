@@ -44,6 +44,26 @@ public class JavaLint {
             }
         }, null);
 
+        cu.accept(new ModifierVisitor<Void>() {
+            @Override
+            public Visitable visit(WhileStmt n, Void arg) {
+                n.getCondition().ifBinaryExpr(binaryExpr -> {
+                    if (binaryExpr.getOperator() == BinaryExpr.Operator.GREATER
+                            || binaryExpr.getOperator() == BinaryExpr.Operator.GREATER_EQUALS
+                            || binaryExpr.getOperator() == BinaryExpr.Operator.LESS
+                            || binaryExpr.getOperator() == BinaryExpr.Operator.LESS_EQUALS) {
+                        binaryExpr.getRight().ifBinaryExpr(b -> {
+                            if (b.getOperator() == BinaryExpr.Operator.MINUS
+                                    || b.getOperator() == BinaryExpr.Operator.PLUS) {
+                                Log.info("here");
+                            }
+                        });
+                    }
+                });
+                return super.visit(n, arg);
+            }
+        }, null);
+
         Log.info("Completed.");
     }
 }
