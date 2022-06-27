@@ -11,14 +11,47 @@ import com.github.javaparser.utils.CodeGenerationUtils;
 import com.github.javaparser.utils.Log;
 import com.github.javaparser.utils.SourceRoot;
 
+import java.io.File;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class JavaLint {
     public static void main(String[] args) {
         Log.setAdapter(new Log.SilentAdapter());
 
-        SourceRoot sourceRoot = new SourceRoot(CodeGenerationUtils.fileInPackageAbsolutePath("src/main/resources", "", ""));
-        CompilationUnit cu = sourceRoot.parse("", "Loop.java");
+        if (args.length == 0 || args[0].equals("--help")) {
+            System.out.println("usage: java -jar javalint.jar --file FILE [--help]");
+            System.out.println("");
+            System.out.println("javalint");
+            System.out.println("");
+            System.out.println("optional arguments:");
+            System.out.println("  --file  file name (/path/to/name.java)");
+            System.out.println("  --help  show this help message and exit");
+            return;
+        }
+
+        if (!args[0].equals("--file")) {
+            System.out.println("--file required");
+            return;
+        }
+
+        if (args.length == 1) {
+            System.out.println("file required");
+            return;
+        }
+
+        File f = new File(args[1]);
+        if (!f.exists()) {
+            System.out.println("file not exist");
+            return;
+        }
+
+        Path p = Paths.get(args[1]);
+        String path = p.getParent().toString();
+        String name = p.getFileName().toString();
+
+        SourceRoot sourceRoot = new SourceRoot(CodeGenerationUtils.fileInPackageAbsolutePath(path, "", ""));
+        CompilationUnit cu = sourceRoot.parse("", name);
 
         cu.accept(new ModifierVisitor<Void>() {
             @Override
@@ -33,7 +66,7 @@ public class JavaLint {
                                 if (b.getOperator() == BinaryExpr.Operator.MINUS
                                         || b.getOperator() == BinaryExpr.Operator.PLUS) {
                                     int line = n.getBegin().get().line;
-                                    System.out.println("javalint:file:" + line + ":Error:Possible incorrect condition in range-based for loop");
+                                    System.out.println("javalint" + ":" + name + ":" + line + ":" + "Error" + ":" + "Possible incorrect condition in range-based for loop");
                                 }
                             });
                         }
@@ -55,7 +88,7 @@ public class JavaLint {
                             if (b.getOperator() == BinaryExpr.Operator.MINUS
                                     || b.getOperator() == BinaryExpr.Operator.PLUS) {
                                 int line = n.getBegin().get().line;
-                                System.out.println("javalint:file:" + line + ":Error:Possible incorrect condition in range-based while loop");
+                                System.out.println("javalint" + ":" + name + ":" + line + ":" + "Error" + ":" + "Possible incorrect condition in range-based while loop");
                             }
                         });
                     }

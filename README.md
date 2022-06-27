@@ -32,7 +32,7 @@ mvn clean install -Dhttp.proxyHost=http-proxy -Dhttp.proxyPort=80 -Dhttps.proxyH
 ## Run
 
 ```bash
-java -jar target/javalint-1.0-shaded.jar
+java -jar target/javalint-latest-shaded.jar
 ```
 
 
@@ -40,6 +40,13 @@ java -jar target/javalint-1.0-shaded.jar
 ## Usage
 
 ```
+usage: java -jar javalint-latest-shaded.jar --file FILE [--help]
+
+javalint
+
+optional arguments:
+  --file  file name (/path/to/name.java)
+  --help  show this help message and exit
 ```
 
 
