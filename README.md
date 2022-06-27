@@ -1,6 +1,6 @@
 # javalint
 
-[![Tag](https://img.shields.io/github/tag/devops-lintflow/javalint.svg?color=brightgreen)](https://github.com/devops-lintflow/javalint/tags)
+[![Tag](https://img.shields.io/github/tag/devops-lintflow/javalint.svg)](https://github.com/devops-lintflow/javalint/tags)
 
 
 
