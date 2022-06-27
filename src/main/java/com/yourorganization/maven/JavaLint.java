@@ -15,12 +15,10 @@ import java.nio.file.Paths;
 
 public class JavaLint {
     public static void main(String[] args) {
-        Log.setAdapter(new Log.StandardOutStandardErrorAdapter());
+        Log.setAdapter(new Log.SilentAdapter());
 
         SourceRoot sourceRoot = new SourceRoot(CodeGenerationUtils.fileInPackageAbsolutePath("src/main/resources", "", ""));
         CompilationUnit cu = sourceRoot.parse("", "Loop.java");
-
-        Log.info("Running...");
 
         cu.accept(new ModifierVisitor<Void>() {
             @Override
@@ -34,7 +32,8 @@ public class JavaLint {
                             binaryExpr.getRight().ifBinaryExpr(b -> {
                                 if (b.getOperator() == BinaryExpr.Operator.MINUS
                                         || b.getOperator() == BinaryExpr.Operator.PLUS) {
-                                    Log.info("here");
+                                    int line = n.getBegin().get().line;
+                                    System.out.println("javalint:file:" + line + ":Error:Possible incorrect condition in range-based for loop");
                                 }
                             });
                         }
@@ -55,7 +54,8 @@ public class JavaLint {
                         binaryExpr.getRight().ifBinaryExpr(b -> {
                             if (b.getOperator() == BinaryExpr.Operator.MINUS
                                     || b.getOperator() == BinaryExpr.Operator.PLUS) {
-                                Log.info("here");
+                                int line = n.getBegin().get().line;
+                                System.out.println("javalint:file:" + line + ":Error:Possible incorrect condition in range-based while loop");
                             }
                         });
                     }
@@ -63,7 +63,5 @@ public class JavaLint {
                 return super.visit(n, arg);
             }
         }, null);
-
-        Log.info("Completed.");
     }
 }
