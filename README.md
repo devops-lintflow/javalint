@@ -32,7 +32,7 @@ mvn clean install -Dhttp.proxyHost=http-proxy -Dhttp.proxyPort=80 -Dhttps.proxyH
 ## Run
 
 ```bash
-java -jar target/javalint-latest-shaded.jar
+java -jar target/javalint-latest-shaded.jar --file src/main/resources/Loop.java
 ```
 
 
