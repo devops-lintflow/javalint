@@ -2,6 +2,7 @@ package com.yourorganization.maven;
 
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.expr.BinaryExpr;
+import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.stmt.ForStmt;
 import com.github.javaparser.ast.stmt.Statement;
 import com.github.javaparser.ast.stmt.WhileStmt;
@@ -66,7 +67,8 @@ public class JavaLint {
                                 if (b.getOperator() == BinaryExpr.Operator.MINUS
                                         || b.getOperator() == BinaryExpr.Operator.PLUS) {
                                     int line = n.getBegin().get().line;
-                                    System.out.println(p + ":" + line + ":" + "Error" + ":" + "Possible incorrect condition in range-based for loop");
+                                    System.out.println(p + ":" + line + ":" + "Error" + ":"
+                                            + "Possible incorrect condition in range-based for loop");
                                 }
                             });
                         }
@@ -88,11 +90,23 @@ public class JavaLint {
                             if (b.getOperator() == BinaryExpr.Operator.MINUS
                                     || b.getOperator() == BinaryExpr.Operator.PLUS) {
                                 int line = n.getBegin().get().line;
-                                System.out.println(p + ":" + line + ":" + "Error" + ":" + "Possible incorrect condition in range-based while loop");
+                                System.out.println(p + ":" + line + ":" + "Error" + ":"
+                                        + "Possible incorrect condition in range-based while loop");
                             }
                         });
                     }
                 });
+                return super.visit(n, arg);
+            }
+        }, null);
+
+        cu.accept(new ModifierVisitor<Void>() {
+            @Override
+            public Visitable visit(MethodCallExpr n, Void arg) {
+                int line = n.getBegin().get().line;
+                System.out.println(p + ":" + line + ":" + "Warn" + ":"
+                        + "Possible null pointer dereference in " + n.getScope().get() + "." + n.getName().asString()
+                        + ", and " + n.getScope().get() + " should be checked for null");
                 return super.visit(n, arg);
             }
         }, null);
