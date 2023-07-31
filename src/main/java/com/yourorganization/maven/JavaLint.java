@@ -67,7 +67,7 @@ public class JavaLint {
                                 if (b.getOperator() == BinaryExpr.Operator.MINUS
                                         || b.getOperator() == BinaryExpr.Operator.PLUS) {
                                     int line = n.getBegin().get().line;
-                                    System.out.println(p + ":" + line + ":" + "Error" + ":"
+                                    System.out.println(p + ":" + line + ":" + "Warn" + ":"
                                             + "Possible incorrect condition in range-based for loop");
                                 }
                             });
@@ -90,7 +90,7 @@ public class JavaLint {
                             if (b.getOperator() == BinaryExpr.Operator.MINUS
                                     || b.getOperator() == BinaryExpr.Operator.PLUS) {
                                 int line = n.getBegin().get().line;
-                                System.out.println(p + ":" + line + ":" + "Error" + ":"
+                                System.out.println(p + ":" + line + ":" + "Warn" + ":"
                                         + "Possible incorrect condition in range-based while loop");
                             }
                         });
